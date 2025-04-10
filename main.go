@@ -1,7 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
+	"strings"
 )
 
 // Структура задачи
@@ -30,20 +34,39 @@ func showList() {
 }
 
 func main() {
-	// list := []Task{
-	// 	{Task: "do smthng", Completed: true},
-	// 	{Task: "let code", Completed: false},
-	// 	{Task: "sleep", Completed: true},
-	// }
-	// data, err := json.MarshalIndent(list, "", "  ")
-	// if err != nil {
-	// 	fmt.Println("Ошибка сериализации:", err)
-	// 	return
-	// }
-	// fmt.Println(string(data))
+	reader := bufio.NewReader(os.Stdin)
 
-	addTask("do smthng")
-	addTask("sleep")
-	addTask("coding")
-	showList()
+	for {
+		fmt.Println("\n--- To-Do Menu ---")
+		fmt.Println("1. Add a task")
+		fmt.Println("2. Show task list")
+		fmt.Println("3. Exit")
+		fmt.Print("\nChoose an action: ")
+
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			log.Fatalf("Error reading input: %v", err)
+		}
+		input = strings.TrimSpace(input)
+
+		switch input {
+		case "1":
+			fmt.Print("Enter task title: ")
+			title, err := reader.ReadString('\n')
+			if err != nil {
+				log.Fatalf("Error reading title: %v", err)
+			}
+			title = strings.TrimSpace(title)
+			addTask(title)
+			fmt.Println("Task added!")
+		case "2":
+			fmt.Println("Task list:")
+			showList()
+		case "3":
+			fmt.Println("Exiting...")
+			return
+		default:
+			fmt.Println("Invalid choice, please try again.")
+		}
+	}
 }
