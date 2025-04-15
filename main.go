@@ -46,7 +46,7 @@ func markComplete(number int) {
 
 // Удалить задачу из списка
 func deleteTask(number int) {
-	if number > 0 && number <= len(List) {
+	if number >= 0 && number < len(List) {
 		List = append(List[:number], List[number+1:]...)
 		fmt.Println("Task deleted.")
 	} else {
