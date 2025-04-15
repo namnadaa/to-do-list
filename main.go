@@ -36,7 +36,7 @@ func showList() {
 
 // Отметить задачу как выполненую
 func markComplete(number int) {
-	if number > 0 && number <= len(List) {
+	if number >= 0 && number < len(List) {
 		List[number].Completed = true
 		fmt.Println("Marked as complete.")
 	} else {
@@ -44,6 +44,7 @@ func markComplete(number int) {
 	}
 }
 
+// Удалить задачу из списка
 func deleteTask(number int) {
 	if number > 0 && number <= len(List) {
 		List = append(List[:number], List[number+1:]...)
