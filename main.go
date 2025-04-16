@@ -54,6 +54,16 @@ func deleteTask(number int) {
 	}
 }
 
+// Edit task by number
+func taskEditing(number int, task string) {
+	if number >= 0 && number < len(List) {
+		List[number].Task = task
+		fmt.Println("Task modified.")
+	} else {
+		fmt.Println("Invalid number.")
+	}
+}
+
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -63,7 +73,8 @@ func main() {
 		fmt.Println("2. Show task list")
 		fmt.Println("3. Mark task as completed")
 		fmt.Println("4. Delete a task")
-		fmt.Println("5. Exit")
+		fmt.Println("5. Edit a task")
+		fmt.Println("6. Exit")
 		fmt.Print("\nChoose an action: ")
 
 		input, err := reader.ReadString('\n')
@@ -112,6 +123,27 @@ func main() {
 				deleteTask(n - 1)
 			}
 		case "5":
+			fmt.Print("Enter the task number: ")
+			number, err := reader.ReadString('\n')
+			if err != nil {
+				log.Fatalf("Error reading number: %v", err)
+			}
+			number = strings.TrimSpace(number)
+			n, err := strconv.Atoi(number)
+			if err != nil {
+				fmt.Printf("Only a number can be entered: %v\n", err)
+				break
+			}
+
+			fmt.Print("Enter new task text: ")
+			newText, err := reader.ReadString('\n')
+			if err != nil {
+				log.Fatalf("Error reading title: %v", err)
+			}
+			newText = strings.TrimSpace(newText)
+
+			taskEditing(n-1, newText)
+		case "6":
 			fmt.Println("Exiting...")
 			return
 		default:
