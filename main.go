@@ -9,21 +9,21 @@ import (
 	"strings"
 )
 
-// Структура задачи
+// Task structure
 type Task struct {
 	Task      string `json:"task"`
 	Completed bool   `json:"done"`
 }
 
-// Список задач
+// Task list
 var List []Task
 
-// Добавление задачи
+// Add a task
 func addTask(task string) {
 	List = append(List, Task{Task: task, Completed: false})
 }
 
-// Показать список
+// Show the list
 func showList() {
 	for i, task := range List {
 		status := "[ ]"
@@ -34,7 +34,7 @@ func showList() {
 	}
 }
 
-// Отметить задачу как выполненую
+// Mark a task as completed
 func markComplete(number int) {
 	if number >= 0 && number < len(List) {
 		List[number].Completed = true
@@ -44,7 +44,7 @@ func markComplete(number int) {
 	}
 }
 
-// Удалить задачу из списка
+// Delete a task from the list
 func deleteTask(number int) {
 	if number >= 0 && number < len(List) {
 		List = append(List[:number], List[number+1:]...)
