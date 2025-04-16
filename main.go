@@ -142,7 +142,21 @@ func main() {
 			}
 			newText = strings.TrimSpace(newText)
 
-			taskEditing(n-1, newText)
+			fmt.Printf("You are about to change task #%d to: \"%s\"\n", n, newText)
+			fmt.Print("Are you sure? (y/n): ")
+			confirm, err := reader.ReadString('\n')
+			if err != nil {
+				log.Fatalf("Error reading title: %v", err)
+			}
+			confirm = strings.TrimSpace(strings.ToLower(confirm))
+
+			if confirm == "y" {
+				taskEditing(n-1, newText)
+			} else if confirm == "n" {
+				fmt.Println("Changes have been canceled.")
+			} else {
+				fmt.Println("Invalid choice, please enter 'y' or 'n'.")
+			}
 		case "6":
 			fmt.Println("Exiting...")
 			return
