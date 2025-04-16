@@ -81,7 +81,7 @@ func main() {
 			}
 			title = strings.TrimSpace(title)
 			addTask(title)
-			fmt.Println("Task added!")
+			fmt.Printf("Task #%d added!\n", len(List))
 		case "2":
 			fmt.Println("Task list:")
 			showList()
