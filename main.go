@@ -119,8 +119,22 @@ func main() {
 			n, err := strconv.Atoi(number)
 			if err != nil {
 				fmt.Printf("Only a number can be entered: %v\n", err)
-			} else {
+				break
+			}
+			fmt.Printf("You are about to delete task #%d\n", n)
+			fmt.Print("Are you sure? (y/n): ")
+			confirm, err := reader.ReadString('\n')
+			if err != nil {
+				log.Fatalf("Error reading title: %v", err)
+			}
+			confirm = strings.TrimSpace(strings.ToLower(confirm))
+
+			if confirm == "y" {
 				deleteTask(n - 1)
+			} else if confirm == "n" {
+				fmt.Println("Task deletion canceled.")
+			} else {
+				fmt.Println("Invalid choice, please enter 'y' or 'n'.")
 			}
 		case "5":
 			fmt.Print("Enter the task number: ")
