@@ -25,13 +25,17 @@ func addTask(task string) {
 
 // Show the list
 func showList() {
+	var count int
+
 	for i, task := range List {
 		status := "[ ]"
 		if task.Completed {
 			status = "[x]"
+			count++
 		}
 		fmt.Printf("%s %d. %s\n", status, i+1, task.Task)
 	}
+	fmt.Printf("\nCompleted: %d/%d\n", count, len(List))
 }
 
 // Mark a task as completed
