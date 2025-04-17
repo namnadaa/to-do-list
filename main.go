@@ -37,8 +37,12 @@ func showList() {
 // Mark a task as completed
 func markComplete(number int) {
 	if number >= 0 && number < len(List) {
-		List[number].Completed = true
-		fmt.Println("Marked as complete.")
+		if !List[number].Completed {
+			List[number].Completed = true
+			fmt.Println("Marked as complete.")
+		} else {
+			fmt.Println("The task has already been marked.")
+		}
 	} else {
 		fmt.Println("Invalid number.")
 	}
