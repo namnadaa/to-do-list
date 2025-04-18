@@ -44,8 +44,8 @@ func toggleMenu(reader *bufio.Reader) {
 		fmt.Println("\n--- Toggle Menu ---")
 		fmt.Println("1. Mark one task")
 		fmt.Println("2. Unmark one task")
-		fmt.Println("3. Mark all task as completed")
-		fmt.Println("4. Unmark all task as completed")
+		fmt.Println("3. Mark all tasks as completed")
+		fmt.Println("4. Unmark all tasks")
 		fmt.Println("5. Back to main menu")
 		fmt.Print("\nChoose an action: ")
 
@@ -92,7 +92,7 @@ func markSingleTask(reader *bufio.Reader) {
 			List[number-1].Completed = true
 			fmt.Println("Marked as complete.")
 		} else {
-			fmt.Println("The task has already marked.")
+			fmt.Println("The task is already marked as completed.")
 		}
 	} else {
 		fmt.Println("Invalid number.")
@@ -120,7 +120,7 @@ func unmarkSingleTask(reader *bufio.Reader) {
 			List[number-1].Completed = false
 			fmt.Println("Marked as not complete.")
 		} else {
-			fmt.Println("The task has already unmarked.")
+			fmt.Println("The task is already not marked as completed.")
 		}
 	} else {
 		fmt.Println("Invalid number.")
