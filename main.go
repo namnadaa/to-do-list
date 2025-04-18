@@ -38,18 +38,117 @@ func showList() {
 	fmt.Printf("\nCompleted: %d/%d\n", count, len(List))
 }
 
+// Submenu toggle task status
+func toggleMenu(reader *bufio.Reader) {
+	for {
+		fmt.Println("\n--- Toggle Menu ---")
+		fmt.Println("1. Mark one task")
+		fmt.Println("2. Unmark one task")
+		fmt.Println("3. Mark all task as completed")
+		fmt.Println("4. Unmark all task as completed")
+		fmt.Println("5. Back to main menu")
+		fmt.Print("\nChoose an action: ")
+
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			log.Fatalf("Error reading input: %v", err)
+		}
+		input = strings.TrimSpace(input)
+
+		switch input {
+		case "1":
+			markSingleTask(reader)
+		case "2":
+			unmarkSingleTask(reader)
+		case "3":
+			markAllTask()
+		case "4":
+			unmarkAllTask()
+		case "5":
+			return
+		default:
+			fmt.Println("Invalid choice. Please try again.")
+		}
+	}
+}
+
 // Mark a task as completed
-func markComplete(number int) {
-	if number >= 0 && number < len(List) {
-		if !List[number].Completed {
-			List[number].Completed = true
+func markSingleTask(reader *bufio.Reader) {
+	fmt.Print("Enter the task number: ")
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		log.Fatalf("Error reading input: %v", err)
+	}
+	input = strings.TrimSpace(input)
+
+	number, err := strconv.Atoi(input)
+	if err != nil {
+		fmt.Printf("Only a number can be entered: %v\n", err)
+		return
+	}
+
+	if number >= 1 && number <= len(List) {
+		if !List[number-1].Completed {
+			List[number-1].Completed = true
 			fmt.Println("Marked as complete.")
 		} else {
-			fmt.Println("The task has already been marked.")
+			fmt.Println("The task has already marked.")
 		}
 	} else {
 		fmt.Println("Invalid number.")
 	}
+}
+
+// Unmark a task as not completed
+func unmarkSingleTask(reader *bufio.Reader) {
+
+	fmt.Print("Enter the task number: ")
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		log.Fatalf("Error reading input: %v", err)
+	}
+	input = strings.TrimSpace(input)
+
+	number, err := strconv.Atoi(input)
+	if err != nil {
+		fmt.Printf("Only a number can be entered: %v\n", err)
+		return
+	}
+
+	if number >= 1 && number <= len(List) {
+		if List[number-1].Completed {
+			List[number-1].Completed = false
+			fmt.Println("Marked as not complete.")
+		} else {
+			fmt.Println("The task has already unmarked.")
+		}
+	} else {
+		fmt.Println("Invalid number.")
+	}
+}
+
+// Mark all task as completed
+func markAllTask() {
+	var count int
+	for i := range List {
+		if !List[i].Completed {
+			List[i].Completed = true
+			count++
+		}
+	}
+	fmt.Printf("Marked %d task(s) as completed.\n", count)
+}
+
+// Unmark all task as completed
+func unmarkAllTask() {
+	var count int
+	for i := range List {
+		if List[i].Completed {
+			List[i].Completed = false
+			count++
+		}
+	}
+	fmt.Printf("Marked %d task(s) as not completed.\n", count)
 }
 
 // Delete a task from the list
@@ -79,7 +178,7 @@ func main() {
 		fmt.Println("\n--- To-Do Menu ---")
 		fmt.Println("1. Add a task")
 		fmt.Println("2. Show task list")
-		fmt.Println("3. Mark task as completed")
+		fmt.Println("3. Toggle menu")
 		fmt.Println("4. Delete a task")
 		fmt.Println("5. Edit a task")
 		fmt.Println("6. Exit")
@@ -99,24 +198,14 @@ func main() {
 				log.Fatalf("Error reading title: %v", err)
 			}
 			title = strings.TrimSpace(title)
+
 			addTask(title)
 			fmt.Printf("Task #%d added!\n", len(List))
 		case "2":
-			fmt.Println("Task list:")
+			fmt.Println("\nTask list:")
 			showList()
 		case "3":
-			fmt.Print("Enter the task number: ")
-			number, err := reader.ReadString('\n')
-			if err != nil {
-				log.Fatalf("Error reading number: %v", err)
-			}
-			number = strings.TrimSpace(number)
-			n, err := strconv.Atoi(number)
-			if err != nil {
-				fmt.Printf("Only a number can be entered: %v\n", err)
-			} else {
-				markComplete(n - 1)
-			}
+			toggleMenu(reader)
 		case "4":
 			fmt.Print("Enter the task number: ")
 			number, err := reader.ReadString('\n')
@@ -124,11 +213,13 @@ func main() {
 				log.Fatalf("Error reading number: %v", err)
 			}
 			number = strings.TrimSpace(number)
+
 			n, err := strconv.Atoi(number)
 			if err != nil {
 				fmt.Printf("Only a number can be entered: %v\n", err)
 				break
 			}
+
 			fmt.Printf("You are about to delete task #%d\n", n)
 			fmt.Print("Are you sure? (y/n): ")
 			confirm, err := reader.ReadString('\n')
@@ -151,6 +242,7 @@ func main() {
 				log.Fatalf("Error reading number: %v", err)
 			}
 			number = strings.TrimSpace(number)
+
 			n, err := strconv.Atoi(number)
 			if err != nil {
 				fmt.Printf("Only a number can be entered: %v\n", err)
@@ -183,7 +275,7 @@ func main() {
 			fmt.Println("Exiting...")
 			return
 		default:
-			fmt.Println("Invalid choice, please try again.")
+			fmt.Println("Invalid choice. Please try again.")
 		}
 	}
 }
