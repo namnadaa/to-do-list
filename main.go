@@ -35,13 +35,12 @@ func showList() {
 		}
 		fmt.Printf("%s %d. %s\n", status, i+1, task.Task)
 	}
-	fmt.Printf("\nCompleted: %d/%d\n", count, len(List))
 
 	barWidth := 10
 	progressRatio := float64(count) / float64(len(List))
 	filled := int(progressRatio * float64(barWidth))
 	progressBar := "[" + strings.Repeat("#", filled) + strings.Repeat("-", barWidth-filled) + "]"
-	fmt.Printf("%s\n", progressBar)
+	fmt.Printf("\n%s %.1f%%  (%d/%d)\n", progressBar, progressRatio*100, count, len(List))
 }
 
 // Submenu toggle task status
