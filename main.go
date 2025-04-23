@@ -54,11 +54,7 @@ func toggleMenu(reader *bufio.Reader) {
 		fmt.Println("5. Back to main menu")
 		fmt.Print("\nChoose an action: ")
 
-		input, err := reader.ReadString('\n')
-		if err != nil {
-			log.Fatalf("Error reading input: %v", err)
-		}
-		input = strings.TrimSpace(input)
+		input := readInput(reader)
 
 		switch input {
 		case "1":
@@ -80,15 +76,11 @@ func toggleMenu(reader *bufio.Reader) {
 // Mark a task as completed
 func markSingleTask(reader *bufio.Reader) {
 	fmt.Print("Enter the task number: ")
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatalf("Error reading input: %v", err)
-	}
-	input = strings.TrimSpace(input)
+	input := readInput(reader)
 
-	number, err := strconv.Atoi(input)
+	number, err := convertValue(input)
 	if err != nil {
-		fmt.Printf("Only a number can be entered: %v\n", err)
+		fmt.Printf("Error: %s\n", err)
 		return
 	}
 
@@ -108,15 +100,11 @@ func markSingleTask(reader *bufio.Reader) {
 func unmarkSingleTask(reader *bufio.Reader) {
 
 	fmt.Print("Enter the task number: ")
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatalf("Error reading input: %v", err)
-	}
-	input = strings.TrimSpace(input)
+	input := readInput(reader)
 
-	number, err := strconv.Atoi(input)
+	number, err := convertValue(input)
 	if err != nil {
-		fmt.Printf("Only a number can be entered: %v\n", err)
+		fmt.Printf("Error: %s\n", err)
 		return
 	}
 
@@ -176,6 +164,24 @@ func taskEditing(number int, task string) {
 	}
 }
 
+// Reads a line of input from the console
+func readInput(reader *bufio.Reader) string {
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		log.Fatalf("Error reading input: %v", err)
+	}
+	return strings.TrimSpace(input)
+}
+
+// Attempts to convert the given string to an integer
+func convertValue(number string) (int, error) {
+	n, err := strconv.Atoi(number)
+	if err != nil {
+		return 0, fmt.Errorf("only a number can be entered: %v", err)
+	}
+	return n, nil
+}
+
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -189,21 +195,12 @@ func main() {
 		fmt.Println("6. Exit")
 		fmt.Print("\nChoose an action: ")
 
-		input, err := reader.ReadString('\n')
-		if err != nil {
-			log.Fatalf("Error reading input: %v", err)
-		}
-		input = strings.TrimSpace(input)
+		input := readInput(reader)
 
 		switch input {
 		case "1":
 			fmt.Print("Enter task title: ")
-			title, err := reader.ReadString('\n')
-			if err != nil {
-				log.Fatalf("Error reading title: %v", err)
-			}
-			title = strings.TrimSpace(title)
-
+			title := readInput(reader)
 			addTask(title)
 			fmt.Printf("Task #%d added!\n", len(List))
 		case "2":
@@ -213,25 +210,16 @@ func main() {
 			toggleMenu(reader)
 		case "4":
 			fmt.Print("Enter the task number: ")
-			number, err := reader.ReadString('\n')
+			number := readInput(reader)
+			n, err := convertValue(number)
 			if err != nil {
-				log.Fatalf("Error reading number: %v", err)
-			}
-			number = strings.TrimSpace(number)
-
-			n, err := strconv.Atoi(number)
-			if err != nil {
-				fmt.Printf("Only a number can be entered: %v\n", err)
+				fmt.Printf("Error: %s\n", err)
 				break
 			}
 
 			fmt.Printf("You are about to delete task #%d\n", n)
 			fmt.Print("Are you sure? (y/n): ")
-			confirm, err := reader.ReadString('\n')
-			if err != nil {
-				log.Fatalf("Error reading title: %v", err)
-			}
-			confirm = strings.TrimSpace(strings.ToLower(confirm))
+			confirm := strings.ToLower(readInput(reader))
 
 			if confirm == "y" {
 				deleteTask(n - 1)
@@ -242,32 +230,19 @@ func main() {
 			}
 		case "5":
 			fmt.Print("Enter the task number: ")
-			number, err := reader.ReadString('\n')
+			number := readInput(reader)
+			n, err := convertValue(number)
 			if err != nil {
-				log.Fatalf("Error reading number: %v", err)
-			}
-			number = strings.TrimSpace(number)
-
-			n, err := strconv.Atoi(number)
-			if err != nil {
-				fmt.Printf("Only a number can be entered: %v\n", err)
+				fmt.Printf("Error: %s\n", err)
 				break
 			}
 
 			fmt.Print("Enter new task text: ")
-			newText, err := reader.ReadString('\n')
-			if err != nil {
-				log.Fatalf("Error reading title: %v", err)
-			}
-			newText = strings.TrimSpace(newText)
+			newText := readInput(reader)
 
 			fmt.Printf("You are about to change task #%d to: \"%s\"\n", n, newText)
 			fmt.Print("Are you sure? (y/n): ")
-			confirm, err := reader.ReadString('\n')
-			if err != nil {
-				log.Fatalf("Error reading title: %v", err)
-			}
-			confirm = strings.TrimSpace(strings.ToLower(confirm))
+			confirm := strings.ToLower(readInput(reader))
 
 			if confirm == "y" {
 				taskEditing(n-1, newText)
