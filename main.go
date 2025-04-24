@@ -12,6 +12,9 @@ import (
 	"strings"
 )
 
+// Variable for the withSave function
+var autosaveEnable = true
+
 // Task structure
 type Task struct {
 	Task      string `json:"task"`
@@ -223,9 +226,11 @@ func loadTasks(fileName string) error {
 func withSave(action func()) {
 	action()
 
-	err := saveTasks("tasks.json")
-	if err != nil {
-		log.Fatalf("Failed to save tasks: %v", err)
+	if autosaveEnable {
+		err := saveTasks("tasks.json")
+		if err != nil {
+			log.Printf("[ERROR] Autosave failed: %v", err)
+		}
 	}
 }
 
