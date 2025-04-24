@@ -2,7 +2,10 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
+	"errors"
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
 	"strconv"
@@ -12,7 +15,7 @@ import (
 // Task structure
 type Task struct {
 	Task      string `json:"task"`
-	Completed bool   `json:"done"`
+	Completed bool   `json:"completed"`
 }
 
 // Task list
@@ -182,8 +185,44 @@ func convertValue(number string) (int, error) {
 	return n, nil
 }
 
+func saveTasks(fileName string) error {
+	data, err := json.MarshalIndent(List, "", "  ")
+	if err != nil {
+		return fmt.Errorf("serialization error: %v", err)
+	}
+
+	err = os.WriteFile(fileName, data, 0644)
+	if err != nil {
+		return fmt.Errorf("task saving error: %v", err)
+	}
+	return nil
+}
+
+func loadTasks(fileName string) error {
+	data, err := os.ReadFile(fileName)
+	if err != nil {
+		if errors.Is(err, fs.ErrNotExist) {
+			List = make([]Task, 0)
+			return nil
+		} else {
+			return fmt.Errorf("task loading error: %v", err)
+		}
+	}
+
+	err = json.Unmarshal(data, &List)
+	if err != nil {
+		return fmt.Errorf("deserialization error: %v", err)
+	}
+
+	return nil
+}
+
 func main() {
 	reader := bufio.NewReader(os.Stdin)
+	err := loadTasks("tasks.json")
+	if err != nil {
+		log.Fatalf("Failed to load tasks: %v", err)
+	}
 
 	for {
 		fmt.Println("\n--- To-Do Menu ---")
@@ -202,12 +241,20 @@ func main() {
 			fmt.Print("Enter task title: ")
 			title := readInput(reader)
 			addTask(title)
+			err := saveTasks("tasks.json")
+			if err != nil {
+				log.Fatalf("Failed to save tasks: %v", err)
+			}
 			fmt.Printf("Task #%d added!\n", len(List))
 		case "2":
 			fmt.Println("\nTask list:")
 			showList()
 		case "3":
 			toggleMenu(reader)
+			err := saveTasks("tasks.json")
+			if err != nil {
+				log.Fatalf("Failed to save tasks: %v", err)
+			}
 		case "4":
 			fmt.Print("Enter the task number: ")
 			number := readInput(reader)
@@ -223,6 +270,10 @@ func main() {
 
 			if confirm == "y" {
 				deleteTask(n - 1)
+				err := saveTasks("tasks.json")
+				if err != nil {
+					log.Fatalf("Failed to save tasks: %v", err)
+				}
 			} else if confirm == "n" {
 				fmt.Println("Task deletion canceled.")
 			} else {
@@ -246,6 +297,10 @@ func main() {
 
 			if confirm == "y" {
 				taskEditing(n-1, newText)
+				err := saveTasks("tasks.json")
+				if err != nil {
+					log.Fatalf("Failed to save tasks: %v", err)
+				}
 			} else if confirm == "n" {
 				fmt.Println("Changes have been canceled.")
 			} else {
