@@ -185,6 +185,7 @@ func convertValue(number string) (int, error) {
 	return n, nil
 }
 
+// Saves tasks to a file
 func saveTasks(fileName string) error {
 	data, err := json.MarshalIndent(List, "", "  ")
 	if err != nil {
@@ -198,6 +199,7 @@ func saveTasks(fileName string) error {
 	return nil
 }
 
+// Loads tasks from a file
 func loadTasks(fileName string) error {
 	data, err := os.ReadFile(fileName)
 	if err != nil {
@@ -215,6 +217,16 @@ func loadTasks(fileName string) error {
 	}
 
 	return nil
+}
+
+// Wrapper over the saveTasks function for autosave
+func withSave(action func()) {
+	action()
+
+	err := saveTasks("tasks.json")
+	if err != nil {
+		log.Fatalf("Failed to save tasks: %v", err)
+	}
 }
 
 func main() {
@@ -240,21 +252,17 @@ func main() {
 		case "1":
 			fmt.Print("Enter task title: ")
 			title := readInput(reader)
-			addTask(title)
-			err := saveTasks("tasks.json")
-			if err != nil {
-				log.Fatalf("Failed to save tasks: %v", err)
-			}
+			withSave(func() {
+				addTask(title)
+			})
 			fmt.Printf("Task #%d added!\n", len(List))
 		case "2":
 			fmt.Println("\nTask list:")
 			showList()
 		case "3":
-			toggleMenu(reader)
-			err := saveTasks("tasks.json")
-			if err != nil {
-				log.Fatalf("Failed to save tasks: %v", err)
-			}
+			withSave(func() {
+				toggleMenu(reader)
+			})
 		case "4":
 			fmt.Print("Enter the task number: ")
 			number := readInput(reader)
@@ -269,11 +277,9 @@ func main() {
 			confirm := strings.ToLower(readInput(reader))
 
 			if confirm == "y" {
-				deleteTask(n - 1)
-				err := saveTasks("tasks.json")
-				if err != nil {
-					log.Fatalf("Failed to save tasks: %v", err)
-				}
+				withSave(func() {
+					deleteTask(n - 1)
+				})
 			} else if confirm == "n" {
 				fmt.Println("Task deletion canceled.")
 			} else {
@@ -296,11 +302,9 @@ func main() {
 			confirm := strings.ToLower(readInput(reader))
 
 			if confirm == "y" {
-				taskEditing(n-1, newText)
-				err := saveTasks("tasks.json")
-				if err != nil {
-					log.Fatalf("Failed to save tasks: %v", err)
-				}
+				withSave(func() {
+					taskEditing(n-1, newText)
+				})
 			} else if confirm == "n" {
 				fmt.Println("Changes have been canceled.")
 			} else {
