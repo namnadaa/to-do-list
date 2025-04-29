@@ -58,13 +58,13 @@ The data is loaded automatically when the application starts.
 ## Progress Bar
 
 Visually shows the percentage of completed tasks:
-
+```
 [x] 1. Buy bread
 [ ] 2. Call a friend
 [ ] 3. Write code
 
 [##––––] 33.3%  (1/3)
-
+```
 ---
 
 ## Input Source
