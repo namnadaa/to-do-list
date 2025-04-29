@@ -43,15 +43,17 @@ func showList() {
 	}
 
 	progressBar(count)
-	// barWidth := 10
-	// progressRatio := float64(count) / float64(len(List))
-	// filled := int(progressRatio * float64(barWidth))
-	// progressBar := "[" + strings.Repeat("#", filled) + strings.Repeat("-", barWidth-filled) + "]"
-	// fmt.Printf("\n%s %.1f%%  (%d/%d)\n", progressBar, progressRatio*100, count, len(List))
 }
 
+// Displays the progress bar in the console
 func progressBar(count int) {
 	barWidth := 10
+
+	if len(List) == 0 {
+		fmt.Println("\n[----------] 0.0%  (0/0)")
+		return
+	}
+
 	progressRatio := float64(count) / float64(len(List))
 	filled := int(progressRatio * float64(barWidth))
 	progressBar := "[" + strings.Repeat("#", filled) + strings.Repeat("-", barWidth-filled) + "]"
