@@ -12,55 +12,59 @@ import (
 	"strings"
 )
 
-// Variable for the withSave function
+// autosaveEnable indicates whether autosave is enabled for operations wrapped in withSave.
 var autosaveEnable = false
-var Blue = "\033[34m"         // Menu headers, system messages
-var Green = "\033[32m"        // Successful actions, confirmations
-var Yellow = "\033[38;5;214m" // Questions, warnings
-var Red = "\033[31m"          // Cancellation, denial
-var Magenta = "\033[35m"      // Errors, inadmissible actions
-var Reset = "\033[0m"         // Reset
 
-// Print the line in cyan
+// ANSI color codes used for colored console output.
+var (
+	Blue    = "\033[34m"       // Menu headers and system messages
+	Green   = "\033[32m"       // Successful actions and confirmations
+	Yellow  = "\033[38;5;214m" // Warnings and user prompts
+	Red     = "\033[31m"       // Cancellations and denials
+	Magenta = "\033[35m"       // Errors and invalid actions
+	Reset   = "\033[0m"        // Reset to default color
+)
+
+// blue returns the input text wrapped in ANSI blue color codes.
 func blue(text string) string {
 	return Blue + text + Reset
 }
 
-// Print the line in green
+// green returns the input text wrapped in ANSI green color codes.
 func green(text string) string {
 	return Green + text + Reset
 }
 
-// Print the line in yellow
+// yellow returns the input text wrapped in ANSI yellow color codes.
 func yellow(text string) string {
 	return Yellow + text + Reset
 }
 
-// Print the line in red
+// red returns the input text wrapped in ANSI red color codes.
 func red(text string) string {
 	return Red + text + Reset
 }
 
-// Print the line in magenta
+// magenta returns the input text wrapped in ANSI magenta color codes.
 func magenta(text string) string {
 	return Magenta + text + Reset
 }
 
-// Task structure
+// Task represents a single to-do item with a title and completion status.
 type Task struct {
 	Task      string `json:"task"`
 	Completed bool   `json:"completed"`
 }
 
-// Task list
+// List stores all tasks in memory.
 var List []Task
 
-// Add a task
+// addTask appends a new task to the task list.
 func addTask(task string) {
 	List = append(List, Task{Task: task, Completed: false})
 }
 
-// Show the list
+// showList displays all tasks and a visual progress bar.
 func showList() {
 	var count int
 
@@ -80,6 +84,7 @@ func showList() {
 	progressBar(count)
 }
 
+// colorProgressBar returns a colored version of the progress bar based on the ratio.
 func colorProgressBar(progressRatio float64, bar string) string {
 	percent := progressRatio * 100
 
@@ -93,7 +98,7 @@ func colorProgressBar(progressRatio float64, bar string) string {
 	}
 }
 
-// Displays the progress bar in the console
+// progressBar displays a visual representation of task completion status.
 func progressBar(count int) {
 	fmt.Println(blue("\nProgress:"))
 
@@ -110,7 +115,7 @@ func progressBar(count int) {
 	fmt.Printf("%s %.1f%%  (%d/%d)\n", colorProgressBar(progressRatio, progressBar), progressRatio*100, count, len(List))
 }
 
-// Submenu toggle task status
+// toggleMenu displays a submenu for toggling task statuses.
 func toggleMenu(reader *bufio.Reader) {
 	for {
 		fmt.Println(blue("\n=== Toggle Menu ==="))
@@ -140,7 +145,7 @@ func toggleMenu(reader *bufio.Reader) {
 	}
 }
 
-// Mark a task as completed
+// markSingleTask marks a single task as completed.
 func markSingleTask(reader *bufio.Reader) {
 	fmt.Print("Enter the task number: ")
 	input := readInput(reader)
@@ -163,7 +168,7 @@ func markSingleTask(reader *bufio.Reader) {
 	}
 }
 
-// Unmark a task as not completed
+// unmarkSingleTask marks a single task as not completed.
 func unmarkSingleTask(reader *bufio.Reader) {
 
 	fmt.Print("Enter the task number: ")
@@ -187,7 +192,7 @@ func unmarkSingleTask(reader *bufio.Reader) {
 	}
 }
 
-// Mark all task as completed
+// markAllTask marks all tasks in the list as completed.
 func markAllTask() {
 	var count int
 	for i := range List {
@@ -199,7 +204,7 @@ func markAllTask() {
 	fmt.Printf(green("Marked %d task(s) as completed.\n"), count)
 }
 
-// Unmark all task as completed
+// unmarkAllTask marks all tasks in the list as not completed.
 func unmarkAllTask() {
 	var count int
 	for i := range List {
@@ -211,7 +216,7 @@ func unmarkAllTask() {
 	fmt.Printf(green("Marked %d task(s) as not completed.\n"), count)
 }
 
-// Delete a task from the list
+// deleteTask removes a task from the list by its index.
 func deleteTask(number int) {
 	if number >= 0 && number < len(List) {
 		List = append(List[:number], List[number+1:]...)
@@ -221,7 +226,7 @@ func deleteTask(number int) {
 	}
 }
 
-// Edit task by number
+// taskEditing modifies the text of a task by its index.
 func taskEditing(number int, task string) {
 	if number >= 0 && number < len(List) {
 		List[number].Task = task
@@ -231,7 +236,7 @@ func taskEditing(number int, task string) {
 	}
 }
 
-// Reads a line of input from the console
+// readInput reads a line of input from the console and trims whitespace.
 func readInput(reader *bufio.Reader) string {
 	input, err := reader.ReadString('\n')
 	if err != nil {
@@ -240,7 +245,7 @@ func readInput(reader *bufio.Reader) string {
 	return strings.TrimSpace(input)
 }
 
-// Attempts to convert the given string to an integer
+// convertValue converts a string input into an integer.
 func convertValue(number string) (int, error) {
 	n, err := strconv.Atoi(number)
 	if err != nil {
@@ -249,7 +254,7 @@ func convertValue(number string) (int, error) {
 	return n, nil
 }
 
-// Saves tasks to a file
+// saveTasks serializes the task list and writes it to a file.
 func saveTasks(fileName string) error {
 	data, err := json.MarshalIndent(List, "", "  ")
 	if err != nil {
@@ -263,7 +268,7 @@ func saveTasks(fileName string) error {
 	return nil
 }
 
-// Loads tasks from a file
+// loadTasks reads a file and deserializes its content into the task list.
 func loadTasks(fileName string) error {
 	data, err := os.ReadFile(fileName)
 	if err != nil {
@@ -283,7 +288,7 @@ func loadTasks(fileName string) error {
 	return nil
 }
 
-// Wrapper over the saveTasks function for autosave
+// withSave executes an action and saves the task list if autosave is enabled.
 func withSave(action func()) {
 	action()
 
