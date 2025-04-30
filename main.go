@@ -14,17 +14,16 @@ import (
 
 // Variable for the withSave function
 var autosaveEnable = false
-
-var Cyan = "\033[36m"    // Menu headers, system messages
-var Green = "\033[32m"   // Successful actions, confirmations
-var Yellow = "\033[33m"  // Questions, warnings
-var Red = "\033[31m"     // Cancellation, denial
-var Magenta = "\033[35m" // Errors, inadmissible actions
-var Reset = "\033[0m"    // Reset
+var Blue = "\033[34m"         // Menu headers, system messages
+var Green = "\033[32m"        // Successful actions, confirmations
+var Yellow = "\033[38;5;214m" // Questions, warnings
+var Red = "\033[31m"          // Cancellation, denial
+var Magenta = "\033[35m"      // Errors, inadmissible actions
+var Reset = "\033[0m"         // Reset
 
 // Print the line in cyan
-func cyan(text string) string {
-	return Cyan + text + Reset
+func blue(text string) string {
+	return Blue + text + Reset
 }
 
 // Print the line in green
@@ -65,14 +64,17 @@ func addTask(task string) {
 func showList() {
 	var count int
 
+	fmt.Printf("\n%s  %-7s %-s\n", blue("#"), blue("Status"), blue("Task"))
+
 	for i, task := range List {
-		status := red("[ ]")
+		status := "[ ]"
 		if task.Completed {
-			status = green("[x]")
+			status = "[x]"
 			count++
 		}
-		number := cyan(strconv.Itoa(i + 1))
-		fmt.Printf("%2s. %-4s %s\n", number, status, task.Task)
+
+		number := blue(strconv.Itoa(i + 1))
+		fmt.Printf("%-3s  %-6s %-s\n", number, status, task.Task)
 	}
 
 	progressBar(count)
@@ -109,12 +111,12 @@ func progressBar(count int) {
 // Submenu toggle task status
 func toggleMenu(reader *bufio.Reader) {
 	for {
-		fmt.Println(cyan("\n--- Toggle Menu ---"))
-		fmt.Println(cyan("1.") + " Mark one task")
-		fmt.Println(cyan("2.") + " Unmark one task")
-		fmt.Println(cyan("3.") + " Mark all tasks as completed")
-		fmt.Println(cyan("4.") + " Unmark all tasks")
-		fmt.Println(cyan("5.") + " Back to main menu")
+		fmt.Println(blue("\n--- Toggle Menu ---"))
+		fmt.Println(blue("1.") + " Mark one task")
+		fmt.Println(blue("2.") + " Unmark one task")
+		fmt.Println(blue("3.") + " Mark all tasks as completed")
+		fmt.Println(blue("4.") + " Unmark all tasks")
+		fmt.Println(blue("5.") + " Back to main menu")
 		fmt.Print("\nChoose an action: ")
 
 		input := readInput(reader)
@@ -299,13 +301,13 @@ func main() {
 	}
 
 	for {
-		fmt.Println(cyan("\n--- To-Do Menu ---"))
-		fmt.Println(cyan("1.") + " Add a task")
-		fmt.Println(cyan("2.") + " Show task list")
-		fmt.Println(cyan("3.") + " Toggle menu")
-		fmt.Println(cyan("4.") + " Delete a task")
-		fmt.Println(cyan("5.") + " Edit a task")
-		fmt.Println(cyan("6.") + " Exit")
+		fmt.Println(blue("\n--- To-Do Menu ---"))
+		fmt.Println(blue("1.") + " Add a task")
+		fmt.Println(blue("2.") + " Show task list")
+		fmt.Println(blue("3.") + " Toggle menu")
+		fmt.Println(blue("4.") + " Delete a task")
+		fmt.Println(blue("5.") + " Edit a task")
+		fmt.Println(blue("6.") + " Exit")
 		fmt.Print("\nChoose an action: ")
 
 		input := readInput(reader)
@@ -319,7 +321,7 @@ func main() {
 			})
 			fmt.Printf(green("Task #%d added!\n"), len(List))
 		case "2":
-			fmt.Println(cyan("\nTask list:"))
+			fmt.Println(blue("\nTask list:"))
 			showList()
 		case "3":
 			withSave(func() {
@@ -373,7 +375,7 @@ func main() {
 				fmt.Println(red("Invalid choice, please enter 'y' or 'n'."))
 			}
 		case "6":
-			fmt.Println(cyan("Exiting..."))
+			fmt.Println(blue("Exiting..."))
 			return
 		default:
 			fmt.Println(red("Invalid choice. Please try again."))
