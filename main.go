@@ -64,7 +64,7 @@ func addTask(task string) {
 func showList() {
 	var count int
 
-	fmt.Printf("\n%s  %-7s %-s\n", blue("#"), blue("Status"), blue("Task"))
+	fmt.Printf("%s  %-7s %-s\n", blue("#"), blue("Status"), blue("Task"))
 
 	for i, task := range List {
 		status := "[ ]"
@@ -95,29 +95,31 @@ func colorProgressBar(progressRatio float64, bar string) string {
 
 // Displays the progress bar in the console
 func progressBar(count int) {
+	fmt.Println(blue("\nProgress:"))
+
 	barWidth := 10
 
 	if len(List) == 0 {
-		fmt.Println(red("\n[----------] 0.0% ") + " (0/0)")
+		fmt.Println(red("[----------]") + " 0.0% " + " (0/0)")
 		return
 	}
 
 	progressRatio := float64(count) / float64(len(List))
 	filled := int(progressRatio * float64(barWidth))
 	progressBar := "[" + strings.Repeat("#", filled) + strings.Repeat("-", barWidth-filled) + "]"
-	fmt.Printf("\n%s %.1f%%  (%d/%d)\n", colorProgressBar(progressRatio, progressBar), progressRatio*100, count, len(List))
+	fmt.Printf("%s %.1f%%  (%d/%d)\n", colorProgressBar(progressRatio, progressBar), progressRatio*100, count, len(List))
 }
 
 // Submenu toggle task status
 func toggleMenu(reader *bufio.Reader) {
 	for {
-		fmt.Println(blue("\n--- Toggle Menu ---"))
-		fmt.Println(blue("1.") + " Mark one task")
-		fmt.Println(blue("2.") + " Unmark one task")
-		fmt.Println(blue("3.") + " Mark all tasks as completed")
-		fmt.Println(blue("4.") + " Unmark all tasks")
-		fmt.Println(blue("5.") + " Back to main menu")
-		fmt.Print("\nChoose an action: ")
+		fmt.Println(blue("\n=== Toggle Menu ==="))
+		fmt.Println(blue("1.") + " Mark task")
+		fmt.Println(blue("2.") + " Unmark task")
+		fmt.Println(blue("3.") + " Mark all")
+		fmt.Println(blue("4.") + " Unmark all")
+		fmt.Println(blue("5.") + " Back to menu")
+		fmt.Print(blue("\nChoose an action: "))
 
 		input := readInput(reader)
 
@@ -152,12 +154,12 @@ func markSingleTask(reader *bufio.Reader) {
 	if number >= 1 && number <= len(List) {
 		if !List[number-1].Completed {
 			List[number-1].Completed = true
-			fmt.Println(green("Marked as complete."))
+			fmt.Println(green("Task marked as complete."))
 		} else {
-			fmt.Println(yellow("The task is already marked as completed."))
+			fmt.Println(yellow("Task is already marked as completed."))
 		}
 	} else {
-		fmt.Println(red("Invalid number."))
+		fmt.Println(red("Invalid task number."))
 	}
 }
 
@@ -176,12 +178,12 @@ func unmarkSingleTask(reader *bufio.Reader) {
 	if number >= 1 && number <= len(List) {
 		if List[number-1].Completed {
 			List[number-1].Completed = false
-			fmt.Println(green("Marked as not complete."))
+			fmt.Println(green("Task marked as not complete."))
 		} else {
-			fmt.Println(yellow("The task is already not marked as completed."))
+			fmt.Println(yellow("Task is already not marked as completed."))
 		}
 	} else {
-		fmt.Println(red("Invalid number."))
+		fmt.Println(red("Invalid task number."))
 	}
 }
 
@@ -215,7 +217,7 @@ func deleteTask(number int) {
 		List = append(List[:number], List[number+1:]...)
 		fmt.Println(green("Task deleted."))
 	} else {
-		fmt.Println(red("Invalid number."))
+		fmt.Println(red("Invalid task number."))
 	}
 }
 
@@ -223,9 +225,9 @@ func deleteTask(number int) {
 func taskEditing(number int, task string) {
 	if number >= 0 && number < len(List) {
 		List[number].Task = task
-		fmt.Println(green("Task modified."))
+		fmt.Println(green("Task updated."))
 	} else {
-		fmt.Println(red("Invalid number."))
+		fmt.Println(red("Invalid task number."))
 	}
 }
 
@@ -297,18 +299,18 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	err := loadTasks("tasks.json")
 	if err != nil {
-		log.Fatalf("%s", magenta(fmt.Sprintf("Failed to load tasks: %v", err)))
+		log.Fatalf("%s", magenta(fmt.Sprintf("[ERROR] Failed to load tasks: %v", err)))
 	}
 
 	for {
-		fmt.Println(blue("\n--- To-Do Menu ---"))
-		fmt.Println(blue("1.") + " Add a task")
-		fmt.Println(blue("2.") + " Show task list")
+		fmt.Println(blue("\n=== To-Do Menu ==="))
+		fmt.Println(blue("1.") + " Add task")
+		fmt.Println(blue("2.") + " Show tasks")
 		fmt.Println(blue("3.") + " Toggle menu")
-		fmt.Println(blue("4.") + " Delete a task")
-		fmt.Println(blue("5.") + " Edit a task")
+		fmt.Println(blue("4.") + " Delete task")
+		fmt.Println(blue("5.") + " Edit task")
 		fmt.Println(blue("6.") + " Exit")
-		fmt.Print("\nChoose an action: ")
+		fmt.Print(blue("\nChoose an action: "))
 
 		input := readInput(reader)
 
@@ -321,7 +323,7 @@ func main() {
 			})
 			fmt.Printf(green("Task #%d added!\n"), len(List))
 		case "2":
-			fmt.Println(blue("\nTask list:"))
+			fmt.Println(blue("\n=== Task list ==="))
 			showList()
 		case "3":
 			withSave(func() {
@@ -336,7 +338,7 @@ func main() {
 				break
 			}
 
-			fmt.Printf("You are about to delete task #%d\n", n)
+			fmt.Printf("%s #%d%s\n", blue("You are about to delete task"), n, blue("."))
 			fmt.Print(yellow("Are you sure? (y/n): "))
 			confirm := strings.ToLower(readInput(reader))
 
@@ -345,7 +347,7 @@ func main() {
 					deleteTask(n - 1)
 				})
 			} else if confirm == "n" {
-				fmt.Println(red("Task deletion canceled."))
+				fmt.Println(red("Action canceled."))
 			} else {
 				fmt.Println(red("Invalid choice, please enter 'y' or 'n'."))
 			}
@@ -361,7 +363,7 @@ func main() {
 			fmt.Print("Enter new task text: ")
 			newText := readInput(reader)
 
-			fmt.Printf("You are about to change task #%d to: \"%s\"\n", n, newText)
+			fmt.Printf("%s #%d %s \"%s\"%s\n", blue("You are about to change task"), n, blue("to:"), newText, blue("."))
 			fmt.Print(yellow("Are you sure? (y/n): "))
 			confirm := strings.ToLower(readInput(reader))
 
@@ -370,7 +372,7 @@ func main() {
 					taskEditing(n-1, newText)
 				})
 			} else if confirm == "n" {
-				fmt.Println(red("Changes have been canceled."))
+				fmt.Println(red("Task not changed."))
 			} else {
 				fmt.Println(red("Invalid choice, please enter 'y' or 'n'."))
 			}
