@@ -19,11 +19,12 @@ const (
 
 // Action represents a user operation that can be undone.
 type Action struct {
-	Type      ActionType
-	TaskData  task.Task
-	Index     int
-	PrevText  string
-	PrevState []task.Task
+	Type       ActionType
+	TaskData   task.Task
+	Index      int
+	PrevText   string
+	PrevState  []task.Task
+	SubActions []Action
 }
 
 // History stores a list of actions performed, in order to support undo functionality.
@@ -58,7 +59,12 @@ func Undo() {
 			fmt.Println(color.Magenta("Undo failed: invalid insertion index."))
 		}
 	case Toggle:
-		if last.Index >= 0 && last.Index < len(task.List) {
+		if len(last.SubActions) > 0 {
+			for i := len(last.SubActions) - 1; i >= 0; i-- {
+				a := last.SubActions[i]
+				task.List[a.Index].Completed = !task.List[a.Index].Completed
+			}
+		} else if last.Index >= 0 && last.Index < len(task.List) {
 			task.List[last.Index].Completed = !task.List[last.Index].Completed
 		} else {
 			fmt.Println(color.Magenta("Undo failed: invalid insertion index."))

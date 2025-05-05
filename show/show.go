@@ -92,6 +92,15 @@ func sortTask() {
 	prev := make([]task.Task, len(task.List))
 	copy(prev, task.List)
 
+	alreadySort := sort.SliceIsSorted(task.List, func(i, j int) bool {
+		return task.List[i].Completed && !task.List[j].Completed
+	})
+
+	if alreadySort {
+		fmt.Println(color.Yellow("List is already sorted."))
+		return
+	}
+
 	sort.Slice(task.List, func(i, j int) bool {
 		return task.List[i].Completed && !task.List[j].Completed
 	})

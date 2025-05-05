@@ -109,9 +109,11 @@ func unmarkSingleTask(reader *bufio.Reader) {
 // markAllTask marks all tasks in the list as completed.
 func markAllTask() {
 	var count int
+	var subActions []history.Action
+
 	for i := range task.List {
 		if !task.List[i].Completed {
-			history.Record(history.Action{
+			subActions = append(subActions, history.Action{
 				Type:  history.Toggle,
 				Index: i,
 			})
@@ -120,15 +122,26 @@ func markAllTask() {
 			count++
 		}
 	}
-	fmt.Printf(color.Green("Marked %d task(s) as completed.\n"), count)
+
+	if count > 0 {
+		history.Record(history.Action{
+			Type:       history.Toggle,
+			SubActions: subActions,
+		})
+		fmt.Printf(color.Green("Marked %d task(s) as completed.\n"), count)
+	} else {
+		fmt.Println(color.Yellow("All tasks are alredy completed."))
+	}
 }
 
 // unmarkAllTask marks all tasks in the list as not completed.
 func unmarkAllTask() {
 	var count int
+	var subActions []history.Action
+
 	for i := range task.List {
 		if task.List[i].Completed {
-			history.Record(history.Action{
+			subActions = append(subActions, history.Action{
 				Type:  history.Toggle,
 				Index: i,
 			})
@@ -137,5 +150,14 @@ func unmarkAllTask() {
 			count++
 		}
 	}
-	fmt.Printf(color.Green("Marked %d task(s) as not completed.\n"), count)
+
+	if count > 0 {
+		history.Record(history.Action{
+			Type:       history.Toggle,
+			SubActions: subActions,
+		})
+		fmt.Printf(color.Green("Marked %d task(s) as not completed.\n"), count)
+	} else {
+		fmt.Println(color.Yellow("All tasks are alredy not completed."))
+	}
 }
