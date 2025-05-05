@@ -6,10 +6,12 @@ import (
 	"sort"
 	"strings"
 	"todolist/color"
+	"todolist/history"
 	"todolist/storage"
 	"todolist/task"
 )
 
+// ShowMenu displays the list of tasks and presents a submenu with additional options.
 func ShowMenu(reader *bufio.Reader) {
 	for {
 		fmt.Println(color.Blue("\n=== Task List ==="))
@@ -23,7 +25,9 @@ func ShowMenu(reader *bufio.Reader) {
 
 		switch input {
 		case "1":
-			sortTask()
+			storage.WithSave(func() {
+				sortTask()
+			})
 		case "2":
 			return
 		default:
@@ -85,8 +89,17 @@ func ProgressBar(count int) {
 
 // sortTask sorts the task list so that completed tasks appear before uncompleted ones.
 func sortTask() {
+	prev := make([]task.Task, len(task.List))
+	copy(prev, task.List)
+
 	sort.Slice(task.List, func(i, j int) bool {
 		return task.List[i].Completed && !task.List[j].Completed
 	})
+
+	history.Record(history.Action{
+		Type:      history.Sort,
+		PrevState: prev,
+	})
+
 	fmt.Println(color.Green("List sorted."))
 }

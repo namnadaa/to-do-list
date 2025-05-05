@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"todolist/color"
+	"todolist/history"
 	"todolist/storage"
 	"todolist/task"
 )
@@ -27,9 +28,13 @@ func ToggleMenu(reader *bufio.Reader) {
 		case "2":
 			unmarkSingleTask(reader)
 		case "3":
-			markAllTask()
+			storage.WithSave(func() {
+				markAllTask()
+			})
 		case "4":
-			unmarkAllTask()
+			storage.WithSave(func() {
+				unmarkAllTask()
+			})
 		case "5":
 			return
 		default:
@@ -51,7 +56,15 @@ func markSingleTask(reader *bufio.Reader) {
 
 	if number >= 1 && number <= len(task.List) {
 		if !task.List[number-1].Completed {
-			task.List[number-1].Completed = true
+			history.Record(history.Action{
+				Type:  history.Toggle,
+				Index: number - 1,
+			})
+
+			storage.WithSave(func() {
+				task.List[number-1].Completed = true
+			})
+
 			fmt.Println(color.Green("Task marked as complete."))
 		} else {
 			fmt.Println(color.Yellow("Task is already marked as completed."))
@@ -75,7 +88,15 @@ func unmarkSingleTask(reader *bufio.Reader) {
 
 	if number >= 1 && number <= len(task.List) {
 		if task.List[number-1].Completed {
-			task.List[number-1].Completed = false
+			history.Record(history.Action{
+				Type:  history.Toggle,
+				Index: number - 1,
+			})
+
+			storage.WithSave(func() {
+				task.List[number-1].Completed = false
+			})
+
 			fmt.Println(color.Green("Task marked as not complete."))
 		} else {
 			fmt.Println(color.Yellow("Task is already not marked as completed."))
@@ -90,6 +111,11 @@ func markAllTask() {
 	var count int
 	for i := range task.List {
 		if !task.List[i].Completed {
+			history.Record(history.Action{
+				Type:  history.Toggle,
+				Index: i,
+			})
+
 			task.List[i].Completed = true
 			count++
 		}
@@ -102,6 +128,11 @@ func unmarkAllTask() {
 	var count int
 	for i := range task.List {
 		if task.List[i].Completed {
+			history.Record(history.Action{
+				Type:  history.Toggle,
+				Index: i,
+			})
+
 			task.List[i].Completed = false
 			count++
 		}
