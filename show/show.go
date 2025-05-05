@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"sort"
-	"strconv"
 	"strings"
 	"todolist/color"
 	"todolist/storage"
@@ -37,7 +36,7 @@ func ShowMenu(reader *bufio.Reader) {
 func ShowList() {
 	var count int
 
-	fmt.Printf("%s  %-7s %-s\n", color.Blue("#"), color.Blue("Status"), color.Blue("Task"))
+	fmt.Print(color.Blue(fmt.Sprintf("%-4s%-8s%-s\n", "#", "Status", "Task")))
 
 	for i, task := range task.List {
 		status := "[ ]"
@@ -46,8 +45,8 @@ func ShowList() {
 			count++
 		}
 
-		number := color.Blue(strconv.Itoa(i + 1))
-		fmt.Printf("%-3s  %-6s %-s\n", number, status, task.Task)
+		number := fmt.Sprintf("%-4d", i+1)
+		fmt.Printf("%s%-8s%-s\n", color.Blue(number), status, task.Task)
 	}
 
 	ProgressBar(count)
