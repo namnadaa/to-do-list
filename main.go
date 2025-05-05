@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 	"todolist/color"
+	"todolist/show"
 	"todolist/storage"
 	"todolist/task"
 	"todolist/toggle"
@@ -40,8 +41,9 @@ func main() {
 			})
 			fmt.Printf(color.Green("Task #%d added!\n"), len(task.List))
 		case "2":
-			fmt.Println(color.Blue("\n=== Task list ==="))
-			task.ShowList()
+			storage.WithSave(func() {
+				show.ShowMenu(reader)
+			})
 		case "3":
 			storage.WithSave(func() {
 				toggle.ToggleMenu(reader)
