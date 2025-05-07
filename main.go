@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 	"todolist/color"
+	"todolist/filemenu"
 	"todolist/history"
 	"todolist/show"
 	"todolist/storage"
@@ -116,6 +117,8 @@ func main() {
 		case "7":
 			fmt.Println(color.Blue("Exiting..."))
 			return
+		case "8":
+			filemenu.FileMenu(reader)
 		default:
 			fmt.Println(color.Red("Invalid choice. Please try again."))
 		}

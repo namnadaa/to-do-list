@@ -15,7 +15,7 @@ import (
 )
 
 // autosaveEnable indicates whether autosave is enabled for operations wrapped in withSave.
-var autosaveEnable = true
+var AutosaveEnable = true
 
 // readInput reads a line of input from the console and trims whitespace.
 func ReadInput(reader *bufio.Reader) string {
@@ -33,6 +33,15 @@ func ConvertValue(number string) (int, error) {
 		return 0, fmt.Errorf("only a number can be entered: %v", err)
 	}
 	return n, nil
+}
+
+func SetAutoSave() {
+	AutosaveEnable = !AutosaveEnable
+	if AutosaveEnable {
+		fmt.Println(color.Green("Autosave enebled."))
+	} else {
+		fmt.Println(color.Yellow("Autosave disabled."))
+	}
 }
 
 // saveTasks serializes the task list and writes it to a file.
@@ -73,7 +82,7 @@ func LoadTasks(fileName string) error {
 func WithSave(action func()) {
 	action()
 
-	if autosaveEnable {
+	if AutosaveEnable {
 		err := saveTasks("tasks.json")
 		if err != nil {
 			log.Printf(color.Magenta("[ERROR] Autosave failed: %v"), err)
