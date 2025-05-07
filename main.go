@@ -19,7 +19,8 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	err := storage.LoadTasks("tasks.json")
 	if err != nil {
-		log.Fatalf("%s", color.Magenta(fmt.Sprintf("[ERROR] Failed to load tasks: %v", err)))
+		msg := fmt.Sprintf("[ERROR] Failed to load tasks: %v", err)
+		log.Fatal(color.Magenta(msg))
 	}
 
 	for {
@@ -46,7 +47,8 @@ func main() {
 					TaskData: task.List[len(task.List)-1],
 				})
 			})
-			fmt.Printf(color.Green("Task #%d added!\n"), len(task.List))
+			msg := fmt.Sprintf("Task #%d added!\n", len(task.List))
+			fmt.Print(color.Green(msg))
 		case "2":
 			show.ShowMenu(reader)
 		case "3":
@@ -56,7 +58,8 @@ func main() {
 			number := storage.ReadInput(reader)
 			n, err := storage.ConvertValue(number)
 			if err != nil {
-				fmt.Printf(color.Magenta("Error: %s\n"), err)
+				msg := fmt.Sprintf("Error: %v\n", err)
+				fmt.Print(color.Magenta(msg))
 				break
 			}
 
@@ -84,7 +87,8 @@ func main() {
 			number := storage.ReadInput(reader)
 			n, err := storage.ConvertValue(number)
 			if err != nil {
-				fmt.Printf(color.Magenta("Error: %s\n"), err)
+				msg := fmt.Sprintf("Error: %v\n", err)
+				fmt.Print(color.Magenta(msg))
 				break
 			}
 

@@ -21,7 +21,8 @@ var AutosaveEnable = true
 func ReadInput(reader *bufio.Reader) string {
 	input, err := reader.ReadString('\n')
 	if err != nil {
-		log.Fatalf("%s", color.Magenta(fmt.Sprintf("Error reading input: %v", err)))
+		msg := fmt.Sprintf("Error reading input: %v", err)
+		log.Fatal(color.Magenta(msg))
 	}
 	return strings.TrimSpace(input)
 }
@@ -85,7 +86,8 @@ func WithSave(action func()) {
 	if AutosaveEnable {
 		err := saveTasks("tasks.json")
 		if err != nil {
-			log.Printf(color.Magenta("[ERROR] Autosave failed: %v"), err)
+			msg := fmt.Sprintf("[ERROR] Autosave failed: %v", err)
+			log.Print(color.Magenta(msg))
 		}
 	}
 }

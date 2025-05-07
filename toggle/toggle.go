@@ -50,7 +50,8 @@ func markSingleTask(reader *bufio.Reader) {
 
 	number, err := storage.ConvertValue(input)
 	if err != nil {
-		fmt.Printf(color.Magenta("Error: %s\n"), err)
+		msg := fmt.Sprintf("Error: %v\n", err)
+		fmt.Print(color.Magenta(msg))
 		return
 	}
 
@@ -82,7 +83,8 @@ func unmarkSingleTask(reader *bufio.Reader) {
 
 	number, err := storage.ConvertValue(input)
 	if err != nil {
-		fmt.Printf(color.Magenta("Error: %s\n"), err)
+		msg := fmt.Sprintf("Error: %v\n", err)
+		fmt.Print(color.Magenta(msg))
 		return
 	}
 
@@ -128,7 +130,8 @@ func markAllTask() {
 			Type:       history.Toggle,
 			SubActions: subActions,
 		})
-		fmt.Printf(color.Green("Marked %d task(s) as completed.\n"), count)
+		msg := fmt.Sprintf("Marked %d task(s) as completed.\n", count)
+		fmt.Print(color.Green(msg))
 	} else {
 		fmt.Println(color.Yellow("All tasks are alredy completed."))
 	}
@@ -156,7 +159,8 @@ func unmarkAllTask() {
 			Type:       history.Toggle,
 			SubActions: subActions,
 		})
-		fmt.Printf(color.Green("Marked %d task(s) as not completed.\n"), count)
+		msg := fmt.Sprintf("Marked %d task(s) as not completed.\n", count)
+		fmt.Print(color.Green(msg))
 	} else {
 		fmt.Println(color.Yellow("All tasks are alredy not completed."))
 	}

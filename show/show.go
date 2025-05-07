@@ -15,7 +15,7 @@ import (
 func ShowMenu(reader *bufio.Reader) {
 	for {
 		fmt.Println(color.Blue("\n=== Task List ==="))
-		ShowList()
+		showList()
 		fmt.Println(color.Blue("\n--- Show Menu ---"))
 		fmt.Println(color.Blue("1.") + "Sort by completed")
 		fmt.Println(color.Blue("2.") + "Back to menu")
@@ -37,10 +37,11 @@ func ShowMenu(reader *bufio.Reader) {
 }
 
 // ShowList displays all tasks and a visual progress bar.
-func ShowList() {
+func showList() {
 	var count int
 
-	fmt.Print(color.Blue(fmt.Sprintf("%-4s%-8s%-s\n", "#", "Status", "Task")))
+	msg := fmt.Sprintf("%-4s%-8s%-s\n", "#", "Status", "Task")
+	fmt.Print(color.Blue(msg))
 
 	for i, task := range task.List {
 		status := "[ ]"
@@ -53,7 +54,7 @@ func ShowList() {
 		fmt.Printf("%s%-8s%-s\n", color.Blue(number), status, task.Task)
 	}
 
-	ProgressBar(count)
+	progressBar(count)
 }
 
 // colorProgressBar returns a colored version of the progress bar based on the ratio.
@@ -71,7 +72,7 @@ func colorProgressBar(progressRatio float64, bar string) string {
 }
 
 // ProgressBar displays a visual representation of task completion status.
-func ProgressBar(count int) {
+func progressBar(count int) {
 	fmt.Println(color.Blue("\nProgress:"))
 
 	barWidth := 10
