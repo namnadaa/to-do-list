@@ -31,14 +31,14 @@ Users interact with the app by selecting options and typing input via the keyboa
 ## Menus Overview
 
 ### Main Menu
-- 1. Add task  
-- 2. Show tasks  
-- 3. Toggle menu (mark/unmark)  
-- 4. Delete task  
-- 5. Edit task  
-- 6. Undo last action  
-- 7. File menu  
-- 8. Exit  
+- Add task  
+- Show tasks  
+- Toggle menu (mark/unmark)  
+- Delete task  
+- Edit task  
+- Undo last action  
+- File menu  
+- Exit  
 
 ### Toggle Menu
 - Mark or unmark a single task  
@@ -112,6 +112,8 @@ go run main.go
 ---
 
 ## Project Structure
+
+```
 todolist/
 │
 ├── main.go               # Entry point  
@@ -125,3 +127,4 @@ todolist/
 ├── show/                 # Display list and progress  
 ├── storage/              # Autosave, save/load, export  
 ├── filemenu/             # File menu options  
+```
