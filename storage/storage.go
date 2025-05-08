@@ -91,3 +91,43 @@ func WithSave(action func()) {
 		}
 	}
 }
+
+func SaveAs(reader *bufio.Reader) {
+	fmt.Print("Enter file name to save as: ")
+	fileName := ReadInput(reader)
+
+	err := saveTasks(fileName)
+	if err != nil {
+		msg := fmt.Sprintf("[ERROR] Failed to save file: %v", err)
+		log.Print(color.Magenta(msg))
+		return
+	}
+
+	fmt.Println(color.Green("Tasks saved to:"), fileName)
+}
+
+func ExportToText(reader *bufio.Reader) error {
+	fmt.Print("Enter file name to export: ")
+	fileName := ReadInput(reader)
+
+	msg := fmt.Sprintf("%-8s%s", "Status", "Task")
+	lines := []string{msg}
+
+	for _, t := range task.List {
+		status := "[ ]"
+		if t.Completed {
+			status = "[x]"
+		}
+		line := fmt.Sprintf("%-8s%s", status, t.Task)
+		lines = append(lines, line)
+	}
+
+	data := strings.Join(lines, "\n")
+	err := os.WriteFile(fileName, []byte(data), 0644)
+	if err != nil {
+		return fmt.Errorf("task export error: %v", err)
+	}
+
+	fmt.Println(color.Green("Tasks exported to:"), fileName)
+	return nil
+}

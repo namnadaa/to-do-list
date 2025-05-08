@@ -31,7 +31,8 @@ func main() {
 		fmt.Println(color.Blue("4.") + " Delete task")
 		fmt.Println(color.Blue("5.") + " Edit task")
 		fmt.Println(color.Blue("6.") + " Undo action")
-		fmt.Println(color.Blue("7.") + " Exit")
+		fmt.Println(color.Blue("7.") + " File menu")
+		fmt.Println(color.Blue("8.") + " Exit")
 		fmt.Print(color.Blue("\nChoose an action: "))
 
 		input := storage.ReadInput(reader)
@@ -119,10 +120,10 @@ func main() {
 				history.Undo()
 			})
 		case "7":
+			filemenu.FileMenu(reader)
+		case "8":
 			fmt.Println(color.Blue("Exiting..."))
 			return
-		case "8":
-			filemenu.FileMenu(reader)
 		default:
 			fmt.Println(color.Red("Invalid choice. Please try again."))
 		}
