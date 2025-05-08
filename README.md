@@ -1,81 +1,127 @@
 # To-Do List CLI
 
-A simple command-line application for managing a task list, written in Go.  
-This project demonstrates modular architecture, submenu support, automatic data saving, and task progress visualization.
+A feature-rich command-line To-Do list application written in Go.
+This project demonstrates modular architecture, colorized terminal output, autosaving, undo functionality, and export features.
 
 ---
 
 ## Features
 
-- Add, edit, and delete tasks  
-- Mark and unmark tasks as completed  
-- Bulk actions (mark/unmark all)  
-- Submenu for task status control  
-- Automatic saving to `tasks.json` after every change  
-- Task progress bar  
-- Task loading at startup  
-- Console-based input
+- Add, edit, and delete tasks
+- Mark and unmark tasks as completed
+- Batch toggle all tasks
+- Autosave with toggleable state
+- Undo the last action (add, edit, delete, toggle, sort)
+- Sort tasks by completion
+- Export task list to a plain text file
+- Save the task list to a custom file (Save As...)
+- Colored and aligned terminal output
+- Visual progress bar
+- Modular structure (packages: task, storage, toggle, history, show, filemenu, color)
 
 ---
 
 ## How It Works
 
-The program runs in the terminal and provides a text-based menu.  
-The user selects actions, enters data via keyboard, and the app updates the task list while saving changes automatically.
+The application runs in the terminal and displays an interactive text-based menu.
+Users interact with the app by selecting options and typing input via the keyboard.
 
 ---
 
-## Processing Stages
+## Menus Overview
 
-- **Add Task**  
-  Input the task text and add it to the list.
+### Main Menu
+- 1. Add task  
+- 2. Show tasks  
+- 3. Toggle menu (mark/unmark)  
+- 4. Delete task  
+- 5. Edit task  
+- 6. Undo last action  
+- 7. File menu  
+- 8. Exit  
 
-- **Edit Task**  
-  Modify the text of an existing task with confirmation.
+### Toggle Menu
+- Mark or unmark a single task  
+- Mark or unmark all tasks  
+- Return to main menu  
 
-- **Delete Task**  
-  Delete a task by number with confirmation.
+### File Menu
+- Toggle autosave on/off  
+- Save task list to custom file (Save As...)  
+- Export task list to `.txt`  
+- Return to main menu  
 
-- **Toggle Menu (submenu)**  
-  Controls the completion status of tasks:
-  - Mark a single task
-  - Unmark a single task
-  - Mark all
-  - Unmark all
+---
 
-- **Autosave (`withSave`)**  
-  Every change is wrapped in a function that automatically saves the task list to `tasks.json`.
+## Export Example
+
+When exporting, tasks are formatted like this:
+
+```
+Status  Task
+[x]     Buy bread
+[ ]     Call a friend
+[ ]     Write code
+```
+
+---
+
+## Undo Support
+
+Undo is available for:
+- Task creation  
+- Task deletion  
+- Task editing  
+- Task completion toggling (including mass toggle)  
+- Sorting  
+
+Each undo reverts only the last action.
 
 ---
 
 ## Data Storage
 
-Tasks are serialized in JSON format and saved to a `tasks.json` file in the root directory.  
-The data is loaded automatically when the application starts.
+Tasks are stored in `tasks.json` in JSON format.  
+On startup, tasks are automatically loaded.  
+Autosave is enabled by default and can be toggled.
 
 ---
 
 ## Progress Bar
 
-Visually shows the percentage of completed tasks:
+Displays the percentage of completed tasks:
+
 ```
-[x] 1. Buy bread
-[ ] 2. Call a friend
-[ ] 3. Write code
+#   Status  Task
+1   [x]     Buy bread
+2   [ ]     Call a friend
+3   [ ]     Write code
 
-[##––––] 33.3%  (1/3)
+Progress:
+[###-------] 33.3%  (1/3)
 ```
----
-
-## Input Source
-
-All input is entered manually via the console.  
-All actions are selected through the text menu.
 
 ---
 
-## Example Run
+## Running the App
 
 ```bash
 go run main.go
 ```
+
+---
+
+## Project Structure
+todolist/
+│
+├── main.go               # Entry point  
+├── go.mod                # Module definition  
+├── tasks.json            # Task data (ignored by Git)  
+│
+├── color/                # ANSI color helpers  
+├── task/                 # Task logic and model  
+├── toggle/               # Toggle task completion  
+├── history/              # Undo functionality  
+├── show/                 # Display list and progress  
+├── storage/              # Autosave, save/load, export  
+├── filemenu/             # File menu options  
