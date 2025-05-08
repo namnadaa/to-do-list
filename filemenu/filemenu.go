@@ -7,6 +7,8 @@ import (
 	"todolist/storage"
 )
 
+// FileMenu displays a menu for file-related operations such as toggling autosave,
+// saving tasks to a custom file, and exporting tasks to a text file.
 func FileMenu(reader *bufio.Reader) {
 	for {
 		fmt.Println(color.Blue("\n=== File Menu ==="))
@@ -22,9 +24,17 @@ func FileMenu(reader *bufio.Reader) {
 		case "1":
 			storage.SetAutoSave()
 		case "2":
-			storage.SaveAs(reader)
+			err := storage.SaveAs(reader)
+			if err != nil {
+				msg := fmt.Sprintf("[ERROR] Failed to save file: %v", err)
+				fmt.Println(color.Magenta(msg))
+			}
 		case "3":
-			storage.ExportToText(reader)
+			err := storage.ExportToText(reader)
+			if err != nil {
+				msg := fmt.Sprintf("[ERROR] Failed to export file: %v", err)
+				fmt.Println(color.Magenta(msg))
+			}
 		case "4":
 			return
 		default:

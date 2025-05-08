@@ -36,6 +36,8 @@ func ConvertValue(number string) (int, error) {
 	return n, nil
 }
 
+// SetAutoSave toggles the autosave setting and displays a message
+// indicating whether autosave has been enabled or disabled.
 func SetAutoSave() {
 	AutosaveEnable = !AutosaveEnable
 	if AutosaveEnable {
@@ -92,23 +94,32 @@ func WithSave(action func()) {
 	}
 }
 
-func SaveAs(reader *bufio.Reader) {
+// SaveAs saves the current task list to a user-defined file.
+func SaveAs(reader *bufio.Reader) error {
 	fmt.Print("Enter file name to save as: ")
 	fileName := ReadInput(reader)
 
-	err := saveTasks(fileName)
-	if err != nil {
-		msg := fmt.Sprintf("[ERROR] Failed to save file: %v", err)
-		log.Print(color.Magenta(msg))
-		return
+	if strings.TrimSpace(fileName) == "" {
+		return fmt.Errorf("file name cannot be empty")
 	}
 
-	fmt.Println(color.Green("Tasks saved to:"), fileName)
+	err := saveTasks(fileName)
+	if err != nil {
+		return fmt.Errorf("failed to save file: %v", err)
+	}
+
+	fmt.Println(color.Green("Tasks saved as:"), fileName)
+	return nil
 }
 
+// ExportToText exports the task list to a plain text file.
 func ExportToText(reader *bufio.Reader) error {
 	fmt.Print("Enter file name to export: ")
 	fileName := ReadInput(reader)
+
+	if strings.TrimSpace(fileName) == "" {
+		return fmt.Errorf("file name cannot be empty")
+	}
 
 	msg := fmt.Sprintf("%-8s%s", "Status", "Task")
 	lines := []string{msg}
