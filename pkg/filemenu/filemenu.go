@@ -3,8 +3,8 @@ package filemenu
 import (
 	"bufio"
 	"fmt"
-	"todolist/color"
-	"todolist/storage"
+	"todolist/pkg/color"
+	"todolist/pkg/storage"
 )
 
 // FileMenu displays a menu for file-related operations such as toggling autosave,

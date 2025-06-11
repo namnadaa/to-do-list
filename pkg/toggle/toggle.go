@@ -3,10 +3,10 @@ package toggle
 import (
 	"bufio"
 	"fmt"
-	"todolist/color"
-	"todolist/history"
-	"todolist/storage"
-	"todolist/task"
+	"todolist/pkg/color"
+	"todolist/pkg/history"
+	"todolist/pkg/storage"
+	"todolist/pkg/task"
 )
 
 // ToggleMenu displays a submenu for toggling task statuses.

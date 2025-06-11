@@ -6,13 +6,13 @@ import (
 	"log"
 	"os"
 	"strings"
-	"todolist/color"
-	"todolist/filemenu"
-	"todolist/history"
-	"todolist/show"
-	"todolist/storage"
-	"todolist/task"
-	"todolist/toggle"
+	"todolist/pkg/color"
+	"todolist/pkg/filemenu"
+	"todolist/pkg/history"
+	"todolist/pkg/show"
+	"todolist/pkg/storage"
+	"todolist/pkg/task"
+	"todolist/pkg/toggle"
 )
 
 func main() {

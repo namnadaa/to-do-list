@@ -10,8 +10,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"todolist/color"
-	"todolist/task"
+	"todolist/pkg/color"
+	"todolist/pkg/task"
 )
 
 // autosaveEnable indicates whether autosave is enabled for operations wrapped in withSave.

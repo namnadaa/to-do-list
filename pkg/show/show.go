@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"sort"
 	"strings"
-	"todolist/color"
-	"todolist/history"
-	"todolist/storage"
-	"todolist/task"
+	"todolist/pkg/color"
+	"todolist/pkg/history"
+	"todolist/pkg/storage"
+	"todolist/pkg/task"
 )
 
 // ShowMenu displays the list of tasks and presents a submenu with additional options.

@@ -2,7 +2,7 @@ package task
 
 import (
 	"fmt"
-	"todolist/color"
+	"todolist/pkg/color"
 )
 
 // Task represents a single to-do item with a title and completion status.

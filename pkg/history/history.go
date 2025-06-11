@@ -2,8 +2,8 @@ package history
 
 import (
 	"fmt"
-	"todolist/color"
-	"todolist/task"
+	"todolist/pkg/color"
+	"todolist/pkg/task"
 )
 
 // ActionType defines a type for representing different kinds of user actions.
