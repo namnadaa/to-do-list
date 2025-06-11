@@ -115,16 +115,17 @@ go run main.go
 
 ```
 todolist/
-│
-├── main.go               # Entry point  
+├── cmd/
+│   └── main.go           # Entry point      
+├── pkg/
+│   ├── color/            # ANSI color helpers      
+│   ├── filemenu/         # File menu options
+│   ├── history/          # Undo functionality  
+│   ├── show/             # Display list and progress 
+│   ├── storage/          # Autosave, save/load, export  
+│   ├── task/             # Task logic and model  
+│   ├── toggle/           # Toggle task completion                
 ├── go.mod                # Module definition  
-├── tasks.json            # Task data (ignored by Git)  
-│
-├── color/                # ANSI color helpers  
-├── task/                 # Task logic and model  
-├── toggle/               # Toggle task completion  
-├── history/              # Undo functionality  
-├── show/                 # Display list and progress  
-├── storage/              # Autosave, save/load, export  
-├── filemenu/             # File menu options  
+├── README.md
+└── tasks.json            # Task data (ignored by Git)  
 ```
